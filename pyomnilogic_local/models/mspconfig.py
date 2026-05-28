@@ -20,7 +20,7 @@ from pyomnilogic_local.omnitypes import (
     BodyOfWaterType,
     ChlorinatorCellType,
     ChlorinatorDispenserType,
-    ChlorinatorMSPConfigMode,
+    ChlorinatorMode,
     ChlorinatorType,
     ColorLogicLightType,
     ColorLogicShow25,
@@ -218,7 +218,7 @@ class MSPChlorinator(OmniBase):
     omni_type: OmniType = OmniType.CHLORINATOR
 
     enabled: bool = Field(alias="Enabled")
-    mode: ChlorinatorMSPConfigMode = Field(alias="Mode")
+    mode: ChlorinatorMode = Field(alias="Mode")
     timed_percent: int = Field(alias="Timed-Percent")
     superchlor_timeout: int = Field(alias="SuperChlor-Timeout")
     orp_timeout: int = Field(alias="ORP-Timeout")
@@ -377,7 +377,7 @@ class MSPSchedule(OmniBase):
     bow_id: int = Field(alias="bow-system-id")  # pyright: ignore[reportGeneralTypeIssues]
     equipment_id: int = Field(alias="equipment-id")
     system_id: int = Field(alias="schedule-system-id")
-    event: MessageType = Field(alias="event")
+    event: MessageType | int = Field(alias="event")
     data: int = Field(alias="data")
     enabled: bool = Field()
     start_minute: int = Field(alias="start-minute")

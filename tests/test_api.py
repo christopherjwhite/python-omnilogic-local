@@ -342,7 +342,7 @@ async def test_async_set_heater_mode_generates_valid_xml() -> None:
     with patch.object(api, "async_send", new_callable=AsyncMock) as mock_send:
         mock_send.return_value = None
 
-        await api.async_set_heater_mode(pool_id=1, equipment_id=2, mode=HeaterMode.HEAT)
+        await api.async_set_heater_mode(pool_id=1, equipment_id=2, mode=HeaterMode.HEATING)
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args
@@ -352,7 +352,7 @@ async def test_async_set_heater_mode_generates_valid_xml() -> None:
 
         assert _get_xml_tag(root) == "Request"
         assert _find_elem(root, "Name").text == "SetUIHeaterModeCmd"
-        assert _find_param(root, "Mode").text == str(HeaterMode.HEAT.value)
+        assert _find_param(root, "Mode").text == str(HeaterMode.HEATING.value)
 
 
 @pytest.mark.asyncio

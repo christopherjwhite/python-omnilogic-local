@@ -10,7 +10,7 @@ from pyomnilogic_local.omnitypes import PumpSpeedPresets, PumpState, PumpType
 from pyomnilogic_local.util import OmniEquipmentNotInitializedError
 
 if TYPE_CHECKING:
-    from pyomnilogic_local.omnitypes import PumpFunction
+    from pyomnilogic_local.omnitypes import PumpFunction, PumpWhyOn
 
 
 class Pump(OmniEquipment[MSPPump, TelemetryPump]):
@@ -151,7 +151,7 @@ class Pump(OmniEquipment[MSPPump, TelemetryPump]):
         return self.telemetry.last_speed
 
     @property
-    def why_on(self) -> int:
+    def why_on(self) -> PumpWhyOn:
         """Reason why the pump is on.
 
         We don't have a confirmation that these are the same as the FilterWhyOn states yet.

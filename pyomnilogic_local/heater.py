@@ -13,7 +13,7 @@ from pyomnilogic_local.util import OmniEquipmentNotInitializedError
 if TYPE_CHECKING:
     from pyomnilogic_local.models.telemetry import Telemetry
     from pyomnilogic_local.omnilogic import OmniLogic
-    from pyomnilogic_local.omnitypes import HeaterMode
+    from pyomnilogic_local.omnitypes import HeaterMode, HeaterWhyOn
 
 
 class Heater(OmniEquipment[MSPVirtualHeater, TelemetryVirtualHeater]):
@@ -173,7 +173,7 @@ class Heater(OmniEquipment[MSPVirtualHeater, TelemetryVirtualHeater]):
         return self.telemetry.silent_mode
 
     @property
-    def why_on(self) -> int:
+    def why_on(self) -> HeaterWhyOn:
         """Returns the reason why the heater is on from telemetry.
 
         We don't have a good understanding of what these values mean yet
