@@ -35,15 +35,15 @@ def test_parse_basic_ack() -> None:
     bytes_ack = b"\x99_\xd1l\x00\x00\x00\x00dv\x8f\xc11.20\x00\x00\x03\xea\x03\x00\x00\x00"
     message = OmniLogicMessage.from_bytes(bytes_ack)
     assert message.id == 2573193580
-    assert message.type is MessageType.ACK
+    assert message.type is MessageType.MSP_ACK
     assert message.compressed is False
-    assert str(message) == "ID: 2573193580, Type: ACK, Compressed: False, Client: OMNI, Body: "
+    assert str(message) == "ID: 2573193580, Type: MSP_ACK, Compressed: False, Client: OMNI, Body: "
 
 
 def test_create_basic_ack() -> None:
     """Validate that we can create a valid basic ACK packet."""
     bytes_ack = b"\x99_\xd1l\x00\x00\x00\x00dv\x8f\xc11.20\x00\x00\x03\xea\x03\x00\x00\x00"
-    message = OmniLogicMessage(2573193580, MessageType.ACK, payload=None, version="1.20")
+    message = OmniLogicMessage(2573193580, MessageType.MSP_ACK, payload=None, version="1.20")
     message.client_type = ClientType.OMNI
     message.timestamp = 1685491649
     assert bytes(message) == bytes_ack
@@ -406,7 +406,7 @@ async def test_ensure_sent_xml_ack_message() -> None:
     sent_bytes = protocol._transport.sendto.call_args[0][0]
     # Verify the sent bytes parse back to an XML_ACK message with the correct ID
     parsed = OmniLogicMessage.from_bytes(sent_bytes)
-    assert parsed.type == MessageType.XML_ACK
+    assert parsed.type == MessageType.ACK
     assert parsed.id == 456
 
 
@@ -527,7 +527,7 @@ async def test_send_ack_generates_xml() -> None:
     sent_bytes = protocol._transport.sendto.call_args[0][0]
 
     parsed = OmniLogicMessage.from_bytes(sent_bytes)
-    assert parsed.type == MessageType.XML_ACK
+    assert parsed.type == MessageType.ACK
     assert parsed.id == 12345
 
     # Verify XML structure contains the expected Ack name element

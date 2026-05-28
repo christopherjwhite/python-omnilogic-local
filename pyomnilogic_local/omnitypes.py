@@ -7,33 +7,35 @@ from .util import PrettyEnum
 
 # OmniAPI Enums
 class MessageType(PrettyEnum, IntEnum):
-    XML_ACK = 0000
+    ACK = 0000
     REQUEST_CONFIGURATION = 1
     SET_FILTER_SPEED = 9
-    SET_HEATER_COMMAND = 11
-    SET_SUPERCHLORINATE = 15
-    SET_SOLAR_SET_POINT_COMMAND = 40
-    SET_HEATER_MODE_COMMAND = 42
-    SET_CHLOR_ENABLED = 121
-    SET_HEATER_ENABLED = 147
-    SET_CHLOR_PARAMS = 155
+    SET_HEATER = 11
+    CHLOR_SUPER_CHLOR_SET = 15
+    SET_SOLAR_SETPOINT = 40
+    SET_HEATER_MODE = 42
+    SET_CHLOR_ENABLE = 121
+    SET_HEATER_ENABLE = 147
+    CHLOR_PARAMS_SET = 155
     SET_EQUIPMENT = 164
-    CREATE_SCHEDULE = 230
-    DELETE_SCHEDULE = 231
-    EDIT_SCHEDULE = 233
+    CREATE_SCHEDULE_CMD = 230
+    DELETE_SCHEDULE_CMD = 231
+    EDIT_SCHEDULE_CMD = 233
     SET_CSAD_TARGET_VALUE = 253
-    SET_CSAD_ORP_TARGET = 281
+    SET_CSAD_ENABLED = 259
+    SET_CSAD_ORP_TARGET_LEVEL = 281
     GET_TELEMETRY = 300
-    GET_ALARM_LIST = 304
-    SET_STANDALONE_LIGHT_SHOW = 308
-    SET_SPILLOVER = 311
-    RUN_GROUP_CMD = 317
+    GET_ALLALARMLIST = 304
+    SET_LIGHT_SHOW = 308
+    SET_SPILLOVER_CMD = 311
+    RUN_GROUP = 317
     RESTORE_IDLE_STATE = 340
-    GET_FILTER_DIAGNOSTIC_INFO = 386
+    GET_FILTER_DIAGNOSTIC = 386
     HANDSHAKE = 1000
-    ACK = 1002
+    MSP_ACK = 1002
     MSP_CONFIGURATIONUPDATE = 1003
     MSP_TELEMETRY_UPDATE = 1004
+    MSP_GET_FILTER_SPEED_RESPONSE = 1010
     MSP_ALARM_LIST_RESPONSE = 1304
     MSP_FILTER_DIAGNOSTIC_INFO_RESPONSE = 1386
     MSP_LEADMESSAGE = 1998
@@ -78,16 +80,14 @@ class BackyardState(PrettyEnum, IntEnum):
     SERVICE_MODE = 2
     CONFIG_MODE = 3
     TIMED_SERVICE_MODE = 4
-
-
-class BodyOfWaterState(PrettyEnum, IntEnum):
-    NO_FLOW = 0
-    FLOW = 1
+    MAX = 5
 
 
 class BodyOfWaterType(PrettyEnum, StrEnum):
     POOL = "BOW_POOL"
     SPA = "BOW_SPA"
+    UNCONFIGURED = "BOW_UNCFG"
+    BACKYARD_DEVICE = "BOW_BYD"
 
 
 # Chlorinators
@@ -164,11 +164,20 @@ class ChlorinatorOperatingMode(PrettyEnum, IntEnum):
     ORP_TIMED_RW = 3  # Chlorinator in ORP mode experienced CSAD condition that prevents ORP operation
 
 
+class ChlorinatorOperatingState(PrettyEnum, IntEnum):
+    WAIT_DEV_READY = 0
+    PAUSE = 1
+    CONTINUE = 2
+    HALT = 3
+    TEMP_PAUSE = 4
+
+
 class ChlorinatorType(PrettyEnum, StrEnum):
     MAIN_PANEL = "CHLOR_TYPE_MAIN_PANEL"
     DISPENSER = "CHLOR_TYPE_DISPENSER"
     AQUA_RITE = "CHLOR_TYPE_AQUA_RITE"
     AQUA_RITE_S3 = "CHLOR_TYPE_AQR_S3"
+    EXPANSION_PANEL = "CHLOR_TYPE_EXPANSION_PANEL"
 
 
 class ChlorinatorDispenserType(PrettyEnum, StrEnum):
@@ -210,6 +219,11 @@ class ColorLogicBrightness(PrettyEnum, IntEnum):
     SIXTY_PERCENT = 2
     EIGHTY_PERCENT = 3
     ONE_HUNDRED_PERCENT = 4
+
+
+class ColorLogicSpecialEffect(PrettyEnum, IntEnum):
+    NO_EFFECT = 0
+    FLICKER = 1
 
 
 type LightShows = ColorLogicShow25 | ColorLogicShow40 | ColorLogicShowUCL | ColorLogicShowUCLV2 | PentairShow | ZodiacShow
@@ -330,12 +344,12 @@ class ZodiacShow(PrettyEnum, IntEnum):
 
 class ColorLogicPowerState(PrettyEnum, IntEnum):
     OFF = 0
-    POWERING_OFF = 1
-    INITIALIZING = 2  # The app shows this as 15 seconds of white, but this state seems to happen when the Omni first powers up
-    CHANGING_SHOW = 3
-    FIFTEEN_SECONDS_WHITE = 4
-    ACTIVE = 6
-    COOLDOWN = 7
+    WAIT_POWER_DOWN = 1
+    RESETTING = 2
+    SHOW_ADVANCE = 3
+    STARTING_APP = 4
+    ON = 6
+    POWER_DOWN = 7
 
 
 class ColorLogicLightType(PrettyEnum, StrEnum):
@@ -345,6 +359,7 @@ class ColorLogicLightType(PrettyEnum, StrEnum):
     SAM = "COLOR_LOGIC_SAM"
     PENTAIR_COLOR = "CL_P_COLOR"
     ZODIAC_COLOR = "CL_Z_COLOR"
+    WATER_BOWL = "CL_WATER_BOWL"
 
     def __str__(self) -> str:
         """Return the string representation of the ColorLogicLightType."""
@@ -369,9 +384,9 @@ class CSADStatus(PrettyEnum, IntEnum):
 class CSADMode(PrettyEnum, IntEnum):
     OFF = 0
     AUTO = 1
-    FORCE_ON = 2
+    FORCED_ON = 2
     MONITORING = 3
-    DISPENSING_OFF = 4
+    DISPENSE_OFF = 4
 
 
 # Filters
@@ -379,15 +394,16 @@ class FilterState(PrettyEnum, IntEnum):
     OFF = 0
     ON = 1
     PRIMING = 2
-    WAITING_TURN_OFF = 3
-    WAITING_TURN_OFF_MANUAL = 4
+    WAITING_TO_TURN_OFF = 3
+    WAITING_TO_TURN_OFF_MANUAL = 4
     HEATER_EXTEND = 5
-    COOLDOWN = 6
-    SUSPEND = 7
+    COOL_DOWN_MODE = 6
+    SUSPENDED = 7
     CSAD_EXTEND = 8
-    FILTER_SUPERCHLORINATE = 9
-    FILTER_FORCE_PRIMING = 10
-    FILTER_WAITING_TURN_OFF = 11
+    SUPERCHLORINATE = 9
+    FORCE_PRIMING = 10
+    WAITING_FOR_PUMP_TO_TURN_OFF = 11
+    WAITING_TO_CHANGE_VALVES = 12
 
 
 class FilterType(PrettyEnum, StrEnum):
@@ -447,6 +463,7 @@ class HeaterState(PrettyEnum, IntEnum):
     OFF = 0
     ON = 1
     PAUSE = 2
+    OFF_COOL_DOWN = 3
 
 
 class HeaterType(PrettyEnum, StrEnum):
@@ -458,28 +475,48 @@ class HeaterType(PrettyEnum, StrEnum):
     SMART = "HTR_SMART"
     CHILLER = "HTR_CHILLER"
     SMART_HEAT_PUMP = "HTR_SMART_HEAT_PUMP"
+    SMART_VSHP = "HTR_SMART_VSHP"
+    SMART_GAS = "HTR_SMART_GAS"
+    TEST_HEATER = "HTR_TEST_HEATER"
 
 
 class HeaterMode(PrettyEnum, IntEnum):
-    HEAT = 0
-    COOL = 1
+    HEATING = 0
+    COOLING = 1
     AUTO = 2
-    UNKNOWN_1 = 3  # https://github.com/cryptk/haomnilogic-local/issues/172
+    OFF = 3  # https://github.com/cryptk/haomnilogic-local/issues/172
 
 
 # Pumps
 class PumpState(PrettyEnum, IntEnum):
     OFF = 0
     ON = 1
-    FREEZE_PROTECT = 2  # This is an assumption that 2 means freeze protect, ref: https://github.com/cryptk/haomnilogic-local/issues/147
-    UNKNOWN_1 = 3  # We assume this value exists as we have evidence of a state of 4 existing
+    ON_FREEZE_PROTECT = 2  # This is an assumption that 2 means freeze protect, ref: https://github.com/cryptk/haomnilogic-local/issues/147
+    OFF_FOR_VALVES_CHANGING = 3  # We assume this value exists as we have evidence of a state of 4 existing
     PRIMING = 4  # https://github.com/cryptk/haomnilogic-local/issues/223
+    UNUSED = 5
+    WAITING_FOR_INTERLOCK = 6
+    PAUSED = 7
 
 
 class PumpType(PrettyEnum, StrEnum):
     SINGLE_SPEED = "PMP_SINGLE_SPEED"
     DUAL_SPEED = "PMP_DUAL_SPEED"
     VARIABLE_SPEED = "PMP_VARIABLE_SPEED_PUMP"
+
+
+class PumpWhyOn(PrettyEnum, IntEnum):
+    NO_MESSAGE = 0
+    FREEZE_PROTECT = 1
+    INTERLOCK = 2
+    GROUP_ON = 3
+    GROUP_OFF = 4
+    MANUAL_OFF = 5
+    COUNTDOWN_DONE = 6
+    END_SCHEDULE = 7
+    MANUAL_ON = 8
+    COUNTDOWN_TIMER = 9
+    SCHEDULE_ON = 10
 
 
 class PumpFunction(PrettyEnum, StrEnum):
@@ -497,6 +534,7 @@ class PumpFunction(PrettyEnum, StrEnum):
     CLEANER_SUCTION = "PMP_CLEANER_SUCTION"
     CLEANER_ROBOTIC = "PMP_CLEANER_ROBOTIC"
     CLEANER_IN_FLOOR = "PMP_CLEANER_IN_FLOOR"
+    WATER_BOWL = "PMP_WATER_BOWL"
 
 
 class PumpSpeedPresets(PrettyEnum, StrEnum):
@@ -524,17 +562,24 @@ class RelayFunction(PrettyEnum, StrEnum):
     CLEANER_SUCTION = "RLY_CLEANER_SUCTION"
     CLEANER_ROBOTIC = "RLY_CLEANER_ROBOTIC"
     CLEANER_IN_FLOOR = "RLY_CLEANER_IN_FLOOR"
+    WATER_BOWL = "RLY_WATER_BOWL"
 
 
 class RelayState(PrettyEnum, IntEnum):
     OFF = 0
     ON = 1
+    ON_FREEZE_PROTECT = 2
+    WAITING_FOR_INTERLOCK = 3
+    PAUSED = 4
+    WAITING_FOR_FILTER = 5
+    STATE_MAX_ENTRY = 6
 
 
 class RelayType(PrettyEnum, StrEnum):
     VALVE_ACTUATOR = "RLY_VALVE_ACTUATOR"
     HIGH_VOLTAGE = "RLY_HIGH_VOLTAGE_RELAY"
     LOW_VOLTAGE = "RLY_LOW_VOLTAGE_RELAY"
+    SMART_VALVE_ACTUATOR = "RLY_SMART_VALVE_ACTUATOR"
 
 
 class RelayWhyOn(PrettyEnum, IntEnum):
@@ -549,15 +594,14 @@ class RelayWhyOn(PrettyEnum, IntEnum):
     GROUP_ON = 8
     FREEZE_PROTECT = 9
     INTERLOCK = 10
-    MAX_ACTION = 11
 
 
 # Sensors
 class SensorType(PrettyEnum, StrEnum):
-    AIR_TEMP = "SENSOR_AIR_TEMP"
-    SOLAR_TEMP = "SENSOR_SOLAR_TEMP"
     WATER_TEMP = "SENSOR_WATER_TEMP"
+    AIR_TEMP = "SENSOR_AIR_TEMP"
     FLOW = "SENSOR_FLOW"
+    SOLAR_TEMP = "SENSOR_SOLAR_TEMP"
     ORP = "SENSOR_ORP"
     EXT_INPUT = "SENSOR_EXT_INPUT"
 
@@ -568,8 +612,9 @@ class SensorUnits(PrettyEnum, StrEnum):
     PPM = "UNITS_PPM"
     GRAMS_PER_LITER = "UNITS_GRAMS_PER_LITER"
     MILLIVOLTS = "UNITS_MILLIVOLTS"
-    NO_UNITS = "UNITS_NO_UNITS"
     ACTIVE_INACTIVE = "UNITS_ACTIVE_INACTIVE"
+    NO_UNITS = "UNITS_NO_UNITS"
+    ADC = "UNITS_ADC"
 
 
 # Valve Actuators

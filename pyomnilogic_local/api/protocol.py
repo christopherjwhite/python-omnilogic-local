@@ -28,7 +28,7 @@ _LOGGER = logging.getLogger(__name__)
 
 _ACK_PAYLOAD = f'<Request xmlns="{XML_NAMESPACE}">\n<Name>Ack</Name>\n</Request>'
 
-_ACK_TYPES = frozenset({MessageType.ACK, MessageType.XML_ACK})
+_ACK_TYPES = frozenset({MessageType.ACK, MessageType.MSP_ACK})
 
 # Type alias for items placed on the receive queue: either a parsed message or a parse error.
 _QueueItem = OmniLogicMessage | OmniMessageFormatError
@@ -110,7 +110,7 @@ class OmniLogicProtocol(asyncio.DatagramProtocol):
         if self._transport is None:
             _LOGGER.warning("cannot send ACK for ID %d, transport unavailable", msg_id)
             return
-        ack = OmniLogicMessage(msg_id=msg_id, msg_type=MessageType.XML_ACK, payload=_ACK_PAYLOAD)
+        ack = OmniLogicMessage(msg_id=msg_id, msg_type=MessageType.ACK, payload=_ACK_PAYLOAD)
         self._transport.sendto(bytes(ack))
         _LOGGER.debug("sent XML_ACK for message ID %d", msg_id)
 

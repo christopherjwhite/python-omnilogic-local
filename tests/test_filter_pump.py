@@ -185,7 +185,7 @@ class TestFilter:
         assert filter_obj.is_ready is False
 
         # WAITING_TURN_OFF state
-        filter_obj.telemetry.state = FilterState.WAITING_TURN_OFF
+        filter_obj.telemetry.state = FilterState.WAITING_TO_TURN_OFF
         assert filter_obj.is_ready is False
 
     @pytest.mark.asyncio

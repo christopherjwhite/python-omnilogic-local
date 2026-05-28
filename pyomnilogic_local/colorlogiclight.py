@@ -222,10 +222,10 @@ class ColorLogicLight(OmniEquipment[MSPColorLogicLight, TelemetryColorLogicLight
 
         # Then check light-specific readiness
         return self.state not in [
-            ColorLogicPowerState.FIFTEEN_SECONDS_WHITE,
-            ColorLogicPowerState.CHANGING_SHOW,
-            ColorLogicPowerState.POWERING_OFF,
-            ColorLogicPowerState.COOLDOWN,
+            ColorLogicPowerState.STARTING_APP,
+            ColorLogicPowerState.SHOW_ADVANCE,
+            ColorLogicPowerState.WAIT_POWER_DOWN,
+            ColorLogicPowerState.POWER_DOWN,
         ]
 
     @control_method

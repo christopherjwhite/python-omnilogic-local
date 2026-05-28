@@ -179,8 +179,8 @@ class Filter(OmniEquipment[MSPFilter, TelemetryFilter]):
             FilterState.PRIMING,
             FilterState.HEATER_EXTEND,
             FilterState.CSAD_EXTEND,
-            FilterState.FILTER_FORCE_PRIMING,
-            FilterState.FILTER_SUPERCHLORINATE,
+            FilterState.FORCE_PRIMING,
+            FilterState.SUPERCHLORINATE,
         )
 
     @property
@@ -203,7 +203,7 @@ class Filter(OmniEquipment[MSPFilter, TelemetryFilter]):
         # We need to consider the filter as ready in this state, otherwise we cannot control the
         # virtual filter to switch the physical filter back BoW
         # ref: https://github.com/cryptk/python-omnilogic-local/issues/100
-        return self.state in (FilterState.OFF, FilterState.ON, FilterState.SUSPEND)
+        return self.state in (FilterState.OFF, FilterState.ON, FilterState.SUSPENDED)
 
     # Control methods
     @control_method
