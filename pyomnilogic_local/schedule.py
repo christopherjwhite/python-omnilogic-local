@@ -10,6 +10,7 @@ from pyomnilogic_local.util import OmniEquipmentNotInitializedError
 if TYPE_CHECKING:
     from pyomnilogic_local.models.telemetry import Telemetry
     from pyomnilogic_local.omnilogic import OmniLogic
+    from pyomnilogic_local.omnitypes import MessageType
 
 
 class Schedule(OmniEquipment[MSPSchedule, None]):
@@ -78,9 +79,9 @@ class Schedule(OmniEquipment[MSPSchedule, None]):
         return self.mspconfig.equipment_id
 
     @property
-    def event(self) -> int:
+    def event(self) -> MessageType | int:
         """Returns the event/action ID that will be executed."""
-        return self.mspconfig.event.value
+        return self.mspconfig.event
 
     @property
     def data(self) -> int:

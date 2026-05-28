@@ -13,9 +13,11 @@ from pyomnilogic_local.omnitypes import (
     FilterSpeedPresets,
     FilterState,
     FilterType,
+    FilterWhyOn,
     PumpFunction,
     PumpState,
     PumpType,
+    PumpWhyOn,
 )
 from pyomnilogic_local.pump import Pump
 
@@ -57,7 +59,7 @@ def sample_filter_telemetry() -> TelemetryFilter:
             "@filterState": FilterState.ON,
             "@filterSpeed": 60,
             "@valvePosition": 1,
-            "@whyFilterIsOn": 14,
+            "@whyFilterIsOn": FilterWhyOn.TIMED_EVENT,
             "@reportedFilterSpeed": 60,
             "@power": 500,
             "@lastSpeed": 50,
@@ -95,7 +97,7 @@ def sample_pump_telemetry() -> TelemetryPump:
             "@pumpState": PumpState.ON,
             "@pumpSpeed": 60,
             "@lastSpeed": 50,
-            "@whyOn": 11,
+            "@whyOn": PumpWhyOn.MANUAL_ON,
         },
     )
 
@@ -142,7 +144,7 @@ class TestFilter:
         assert filter_obj.state == FilterState.ON
         assert filter_obj.speed == 60
         assert filter_obj.valve_position == 1
-        assert filter_obj.why_on == 14
+        assert filter_obj.why_on == FilterWhyOn.TIMED_EVENT
         assert filter_obj.reported_speed == 60
         assert filter_obj.power == 500
         assert filter_obj.last_speed == 50
@@ -291,7 +293,7 @@ class TestPump:
         assert pump_obj.state == PumpState.ON
         assert pump_obj.speed == 60
         assert pump_obj.last_speed == 50
-        assert pump_obj.why_on == 11
+        assert pump_obj.why_on == PumpWhyOn.MANUAL_ON
 
     def test_pump_is_on_true(self, mock_omni: Mock, sample_pump_config: MSPPump, mock_telemetry: Mock) -> None:
         """Test is_on returns True when pump is on."""

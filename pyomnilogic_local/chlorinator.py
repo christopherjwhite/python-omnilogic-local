@@ -8,13 +8,18 @@ from pyomnilogic_local.collections import EquipmentDict
 from pyomnilogic_local.decorators import control_method
 from pyomnilogic_local.models.mspconfig import MSPChlorinator
 from pyomnilogic_local.models.telemetry import TelemetryChlorinator
-from pyomnilogic_local.omnitypes import ChlorinatorMSPConfigMode, ChlorinatorStatus
+from pyomnilogic_local.omnitypes import ChlorinatorMode, ChlorinatorStatus
 from pyomnilogic_local.util import OmniEquipmentNotInitializedError
 
 if TYPE_CHECKING:
     from pyomnilogic_local.models.telemetry import Telemetry
     from pyomnilogic_local.omnilogic import OmniLogic
-    from pyomnilogic_local.omnitypes import ChlorinatorCellType, ChlorinatorDispenserType, ChlorinatorOperatingMode
+    from pyomnilogic_local.omnitypes import (
+        ChlorinatorCellType,
+        ChlorinatorDispenserType,
+        ChlorinatorOperatingMode,
+        ChlorinatorOperatingState,
+    )
 
 
 class Chlorinator(OmniEquipment[MSPChlorinator, TelemetryChlorinator]):
@@ -94,12 +99,12 @@ class Chlorinator(OmniEquipment[MSPChlorinator, TelemetryChlorinator]):
 
     # Expose Telemetry attributes
     @property
-    def operating_state(self) -> int:
+    def operating_state(self) -> ChlorinatorOperatingState:
         """Current operational state of the chlorinator (raw value)."""
         return self.telemetry.operating_state
 
     @property
-    def mode(self) -> ChlorinatorMSPConfigMode:
+    def mode(self) -> ChlorinatorMode:
         """Current operating mode from MSP Config (NOT_CONFIGURED, TIMED, ORP_AUTO).
 
         TThis data appears to have some discrepancies with the mode reported in the Telemetry.
@@ -421,7 +426,7 @@ class Chlorinator(OmniEquipment[MSPChlorinator, TelemetryChlorinator]):
         )
 
     @control_method
-    async def set_op_mode(self, op_mode: ChlorinatorMSPConfigMode) -> None:
+    async def set_op_mode(self, op_mode: ChlorinatorMode) -> None:
         """Set the operating mode for chlorine generation.
 
         Args:
@@ -453,9 +458,9 @@ class Chlorinator(OmniEquipment[MSPChlorinator, TelemetryChlorinator]):
 
         new_op_mode: int
         match op_mode:
-            case ChlorinatorMSPConfigMode.TIMED:
+            case ChlorinatorMode.TIMED:
                 new_op_mode = 1
-            case ChlorinatorMSPConfigMode.ORP_AUTO:
+            case ChlorinatorMode.ORP_AUTO:
                 new_op_mode = 2
             case _:
                 msg = f"Unsupported operating mode: {op_mode}"

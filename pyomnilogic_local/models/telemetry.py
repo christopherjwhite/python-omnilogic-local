@@ -11,6 +11,7 @@ from pyomnilogic_local.omnitypes import (
     ChlorinatorAlert,
     ChlorinatorError,
     ChlorinatorOperatingMode,
+    ChlorinatorOperatingState,
     ChlorinatorStatus,
     ColorLogicBrightness,
     ColorLogicLightType,
@@ -19,6 +20,7 @@ from pyomnilogic_local.omnitypes import (
     ColorLogicShow40,
     ColorLogicShowUCL,
     ColorLogicShowUCLV2,
+    ColorLogicSpecialEffect,
     ColorLogicSpeed,
     CSADMode,
     CSADStatus,
@@ -28,10 +30,12 @@ from pyomnilogic_local.omnitypes import (
     GroupState,
     HeaterMode,
     HeaterState,
+    HeaterWhyOn,
     LightShows,
     OmniType,
     PentairShow,
     PumpState,
+    PumpWhyOn,
     RelayState,
     RelayWhyOn,
     ValveActuatorState,
@@ -127,7 +131,7 @@ class TelemetryChlorinator(BaseModel):
     chlr_alert_raw: int = Field(alias="@chlrAlert")
     chlr_error_raw: int = Field(alias="@chlrError")
     sc_mode: int = Field(alias="@scMode")
-    operating_state: int = Field(alias="@operatingState")
+    operating_state: ChlorinatorOperatingState = Field(alias="@operatingState")
     timed_percent: int | None = Field(alias="@Timed-Percent", default=None)
     operating_mode: ChlorinatorOperatingMode = Field(alias="@operatingMode")
     enable: bool = Field(alias="@enable")
@@ -263,7 +267,7 @@ class TelemetryColorLogicLight(BaseModel):
     show: LightShows = Field(alias="@currentShow")
     speed: ColorLogicSpeed = Field(alias="@speed")
     brightness: ColorLogicBrightness = Field(alias="@brightness")
-    special_effect: int = Field(alias="@specialEffect")
+    special_effect: ColorLogicSpecialEffect = Field(alias="@specialEffect")
 
     def show_name(
         self, model: ColorLogicLightType, v2: bool
@@ -381,7 +385,7 @@ class TelemetryPump(BaseModel):
     state: PumpState = Field(alias="@pumpState")
     speed: int = Field(alias="@pumpSpeed")
     last_speed: int = Field(alias="@lastSpeed")
-    why_on: int = Field(alias="@whyOn")
+    why_on: PumpWhyOn = Field(alias="@whyOn")
 
 
 class TelemetryRelay(BaseModel):
@@ -447,7 +451,7 @@ class TelemetryVirtualHeater(BaseModel):
     solar_set_point: int = Field(alias="@SolarSetPoint")
     mode: HeaterMode = Field(alias="@Mode")
     silent_mode: int = Field(alias="@SilentMode")
-    why_on: int = Field(alias="@whyHeaterIsOn")
+    why_on: HeaterWhyOn = Field(alias="@whyHeaterIsOn")
 
 
 type TelemetryType = (

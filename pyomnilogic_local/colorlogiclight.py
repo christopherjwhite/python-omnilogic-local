@@ -14,7 +14,7 @@ from pyomnilogic_local.util import OmniEquipmentNotInitializedError
 if TYPE_CHECKING:
     from pyomnilogic_local.models.telemetry import Telemetry
     from pyomnilogic_local.omnilogic import OmniLogic
-    from pyomnilogic_local.omnitypes import LightShows
+    from pyomnilogic_local.omnitypes import ColorLogicSpecialEffect, LightShows
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -197,7 +197,7 @@ class ColorLogicLight(OmniEquipment[MSPColorLogicLight, TelemetryColorLogicLight
         return ColorLogicBrightness.ONE_HUNDRED_PERCENT
 
     @property
-    def special_effect(self) -> int:
+    def special_effect(self) -> ColorLogicSpecialEffect:
         """Returns the current special effect."""
         return self.telemetry.special_effect
 

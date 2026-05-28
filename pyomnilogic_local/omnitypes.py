@@ -151,12 +151,14 @@ class ChlorinatorError(PrettyEnum, Flag):
     AQUARITE_PCB_ERROR = 1 << 14
 
 
-class ChlorinatorMSPConfigMode(PrettyEnum, StrEnum):
+# Chlorinator Mode is used in the MSPConfig to represent the desired mode
+class ChlorinatorMode(PrettyEnum, StrEnum):
     DISABLED = "CHLOR_OP_MODE_NOT_CONFIG_R"
     TIMED = "CHLOR_OP_MODE_TIMED"
     ORP_AUTO = "CHLOR_OP_MODE_ORP_AUTO"
 
 
+# Chlorinator Operating Mode is used in the Telemetry to represent the current mode
 class ChlorinatorOperatingMode(PrettyEnum, IntEnum):
     DISABLED = 0
     TIMED = 1
@@ -485,6 +487,25 @@ class HeaterMode(PrettyEnum, IntEnum):
     COOLING = 1
     AUTO = 2
     OFF = 3  # https://github.com/cryptk/haomnilogic-local/issues/172
+
+
+class HeaterWhyOn(PrettyEnum, IntEnum):
+    NO_MESSAGE = 0
+    STOP_HEATER = 1
+    BOOST = 2
+    MANUAL_ON = 3
+    ON_EVENT = 4
+    COOLING = 5
+    SET_CUR_SET_POINT = 6
+    PAUSE = 7
+    RESUME = 8
+    SET_HEATER_SCHEDULE = 9
+    RESTORE_HEATER_SETPOINT = 10
+    STOP_COOL_DOWN = 11
+    SET_SOLAR_SET_POINT = 12
+    SET_SOLAR_SCHEDULE = 13
+    RESTORE_SOLAR_SETPOINT = 14
+    SET_HEATER_MODE = 15
 
 
 # Pumps
