@@ -19,6 +19,7 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
+from pyomnilogic_local.collections import EquipmentDict
 from pyomnilogic_local.heater import Heater
 from pyomnilogic_local.models.mspconfig import MSPConfig, MSPVirtualHeater
 from pyomnilogic_local.models.telemetry import Telemetry, TelemetryHeater, TelemetryVirtualHeater
@@ -144,6 +145,7 @@ def make_heater() -> Heater:
 
     omni = Mock()
     omni._api = Mock()
+    omni._make_equipment_dict = Mock(side_effect=lambda items=None: EquipmentDict(items))
     omni._telemetry_dirty = False
     omni.backyard = SimpleNamespace(telemetry=SimpleNamespace(state=BackyardState.ON))
 
